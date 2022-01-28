@@ -7,7 +7,9 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import co.com.axelis.axelisBack.models.Rol;
 import co.com.axelis.axelisBack.models.Usuario;
+import co.com.axelis.axelisBack.repository.RolRepository;
 import co.com.axelis.axelisBack.repository.UsuarioRepository;
 import co.com.axelis.axelisBack.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UsuarioServiceImplement implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
 
     @Override
     public Usuario crear(Usuario usuario) {
@@ -56,6 +59,20 @@ public class UsuarioServiceImplement implements UsuarioService {
         log.info("Eliminando el usuario con Id: {}", id);
         usuarioRepository.deleteById(id);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public Rol guardarRol(Rol rol) {
+        // TODO: Log.info
+        return rolRepository.save(rol);
+    }
+
+    @Override
+    public void agregarRolUsuario(String correo, String rolNombre) {
+        // TODO: Log.info
+        Usuario usuario = usuarioRepository.findByCorreo(correo);
+        Rol rol = rolRepository.findByNombre(rolNombre);
+        usuario.getRoles().add(rol);
     }
     
 }

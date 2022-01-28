@@ -1,10 +1,15 @@
 package co.com.axelis.axelisBack.models;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -32,5 +37,8 @@ public class Usuario {
 
     @NotEmpty(message = "La contraseña no puede ir vacía.")
     private String contrasena;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Rol> roles = new ArrayList<>();
 
 }
