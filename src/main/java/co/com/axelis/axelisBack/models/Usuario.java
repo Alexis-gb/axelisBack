@@ -28,14 +28,14 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "El nombre no puede ir vacío.")
+    @NotEmpty(message = "El nombre no puede ir vacío")
     private String nombre;
 
     @Column(unique = true)
-    @NotEmpty(message = "El correo no puede ir vacío.")
+    @NotEmpty(message = "El correo no puede ir vacío")
     private String correo;
 
-    @NotEmpty(message = "La contraseña no puede ir vacía.")
+    @NotEmpty(message = "La contraseña no puede ir vacía")
     private String contrasena;
 
     @ManyToMany(fetch = FetchType.EAGER)

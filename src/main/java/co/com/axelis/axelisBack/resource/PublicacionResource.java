@@ -11,75 +11,29 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.com.axelis.axelisBack.models.Publicacion;
 import co.com.axelis.axelisBack.models.Response;
-import co.com.axelis.axelisBack.models.Usuario;
+import co.com.axelis.axelisBack.services.implementations.PublicacionServiceImplement;
 import co.com.axelis.axelisBack.services.implementations.UsuarioServiceImplement;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("usuario")
+@RequestMapping("publicacion")
 @RequiredArgsConstructor
-public class UsuarioResource {
-    private final UsuarioServiceImplement usuarioService;
+public class PublicacionResource {
     
-    // Listar usuarios, by Admin
-    @GetMapping("/listar")
-    public ResponseEntity<Response> obtenerUsuarios(@RequestHeader(value = "auth") String token){
-        if(!usuarioService.validarRol(token, 2L)){
-            return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(LocalDateTime.now())
-                        .message("No cuentas con los permisos para realizar esta acción")
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .statusCode(HttpStatus.UNAUTHORIZED.value())
-                        .build()
-            );
-        }
+    private final PublicacionServiceImplement publicacionService;
+    private final UsuarioServiceImplement usuarioService;
 
-        return ResponseEntity.ok(
-            Response.builder()
-                    .timeStamp(LocalDateTime.now())
-                    .data(Map.of("usuarios", usuarioService.listar(30)))
-                    .message("Usuarios recuperados")
-                    .status(HttpStatus.OK)
-                    .statusCode(HttpStatus.OK.value())
-                    .build()
-        );
-    }
-
-    // Buscar usuario por id, by Admin
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Response> obtenerUsuarioPorId(@RequestHeader(value = "auth") String token, @PathVariable("id") Long id){
-        if(!usuarioService.validarRol(token, 2L)){
-            return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(LocalDateTime.now())
-                        .message("No cuentas con los permisos para realizar esta acción")
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .statusCode(HttpStatus.UNAUTHORIZED.value())
-                        .build()
-            );
-        }
-        
-        return ResponseEntity.ok(
-            Response.builder()
-                    .timeStamp(LocalDateTime.now())
-                    .data(Map.of("usuario", usuarioService.obtener(id)))
-                    .message("Usuario recuperado")
-                    .status(HttpStatus.OK)
-                    .statusCode(HttpStatus.OK.value())
-                    .build()
-        );
-    }
-
-    // Creación de usuario, by Admin
+    // Crear publicación, by admin
     @PostMapping("/crear")
-    public ResponseEntity<Response> crearUsuario(@RequestHeader(value = "auth") String token, @RequestBody @Valid Usuario usuario){
+    public ResponseEntity<Response> crearPublicacion(@RequestHeader(value = "auth") String token, @RequestBody @Valid Publicacion publicacion){
         if(!usuarioService.validarRol(token, 2L)){
             return ResponseEntity.ok(
                 Response.builder()
@@ -90,60 +44,87 @@ public class UsuarioResource {
                         .build()
             );
         }
-        
-        return ResponseEntity.ok(
-            Response.builder()
-                    .timeStamp(LocalDateTime.now())
-                    .data(Map.of("usuario", usuarioService.crear(usuario)))
-                    .message("Usuario creado")
-                    .status(HttpStatus.CREATED)
-                    .statusCode(HttpStatus.CREATED.value())
-                    .build()
-        );
-    }
 
-    // Creación de usuario, by Usuario
-    @PostMapping("/registro")
-    public ResponseEntity<Response> registrar(@RequestBody @Valid Usuario usuario){
         return ResponseEntity.ok(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("usuario", usuarioService.registro(usuario)))
-                    .message("Usuario creado")
-                    .status(HttpStatus.CREATED)
-                    .statusCode(HttpStatus.CREATED.value())
-                    .build()
-        );
-    }
-
-    // Buscar usuario por correo, by Admin
-    @GetMapping("/correo/{correo}")
-    public ResponseEntity<Response> obtenerUsuarioPorCorreo(@RequestHeader(value = "auth") String token, @PathVariable("correo") String correo){
-        if(!usuarioService.validarRol(token, 2L)){
-            return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(LocalDateTime.now())
-                        .message("No cuentas con los permisos para realizar esta acción")
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .statusCode(HttpStatus.UNAUTHORIZED.value())
-                        .build()
-            );
-        }
-        
-        return ResponseEntity.ok(
-            Response.builder()
-                    .timeStamp(LocalDateTime.now())
-                    .data(Map.of("usuario", usuarioService.obtenerPorCorreo(correo)))
-                    .message("Usuario recuperado")
+                    .data(Map.of("publicacion", publicacionService.crear(publicacion)))
+                    .message("Publicación creada")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build()
         );
     }
 
-    // Eliminar usuario por id, by Admin
+    // Obtener publicación por id, by Admin, usuario y invitado
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Response> obtenerPublicacionPorId(@PathVariable("id") Long id){
+        return ResponseEntity.ok(
+            Response.builder()
+                    .timeStamp(LocalDateTime.now())
+                    .data(Map.of("publicacion", publicacionService.obtener(id)))
+                    .message("Publicación recuperada")
+                    .status(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .build()
+        );
+    }
+
+    // Obtener sugerencias de publicaciones, by Admin, usuario y invitado
+    @GetMapping("/sugerencias/{titulo}")
+    public ResponseEntity<Response> obtenerSugerencias(@PathVariable("titulo") String titulo){
+        return ResponseEntity.ok(
+            Response.builder()
+                    .timeStamp(LocalDateTime.now())
+                    .data(Map.of("sugerencias", publicacionService.sugerencias(titulo)))
+                    .message("Sugerencias obtenidas")
+                    .status(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .build()
+        );
+    }
+
+    // Obtener lista de publicaciones, by Admin, usuario y invitado
+    @GetMapping("/listar")
+    public ResponseEntity<Response> obtenerUsuarios(){
+        return ResponseEntity.ok(
+            Response.builder()
+                    .timeStamp(LocalDateTime.now())
+                    .data(Map.of("publicaciones", publicacionService.listar(15)))
+                    .message("Publicaciones recuperadas")
+                    .status(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .build()
+        );
+    }
+
+    // Actualizar publicación, by Admin
+    @PutMapping("/actualizar")
+    public ResponseEntity<Response> actualizarUsuarios(@RequestHeader(value = "auth") String token, @RequestBody @Valid Publicacion publicacion){
+        if(!usuarioService.validarRol(token, 2L)){
+            return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(LocalDateTime.now())
+                        .message("No cuentas con los permisos para realizar esta acción")
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .build()
+            );
+        }
+
+        return ResponseEntity.ok(
+            Response.builder()
+                    .timeStamp(LocalDateTime.now())
+                    .data(Map.of("publicacion", publicacionService.actualizar(publicacion)))
+                    .message("Publicación actualizada")
+                    .status(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .build()
+        );
+    }
+
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<Response> Eliminar(@RequestHeader(value = "auth") String token, @PathVariable("id") Long id){
+    public ResponseEntity<Response> eliminarPublicacion(@RequestHeader(value = "auth") String token, @PathVariable("id") Long id){
         if(!usuarioService.validarRol(token, 2L)){
             return ResponseEntity.ok(
                 Response.builder()
@@ -158,11 +139,12 @@ public class UsuarioResource {
         return ResponseEntity.ok(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("eliminado", usuarioService.eliminar(id)))
-                    .message("Usuario eliminado")
+                    .data(Map.of("eliminado", publicacionService.eliminar(id)))
+                    .message("Publicacion eliminada")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build()
         );
     }
+
 }
