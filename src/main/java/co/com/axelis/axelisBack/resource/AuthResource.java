@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,28 +29,30 @@ public class AuthResource {
 
     @PostMapping("login")
     public ResponseEntity<Response> login(@RequestBody Usuario usuario) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
 
         Usuario usuarioLogueado = usuarioService.verificarCredenciales(usuario);
 
         if(usuarioLogueado != null){
             String token = jwtUtil.create(String.valueOf(usuarioLogueado.getId()), usuarioLogueado.getCorreo());
-            return ResponseEntity.ok(
+            return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
                     .data(Map.of("token", token))
                     .message("Logueado correctamente")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
-                    .build()
+                    .build(), responseHeaders, HttpStatus.OK
             );
         }
-        return ResponseEntity.ok(
+        return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
                     .message("No se ha podido loguear")
                     .status(HttpStatus.UNAUTHORIZED)
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .build()
+                    .build(), responseHeaders, HttpStatus.UNAUTHORIZED
             );
     }
     

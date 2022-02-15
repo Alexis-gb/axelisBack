@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import co.com.axelis.axelisBack.enumeration.Seccion;
 import co.com.axelis.axelisBack.models.Publicacion;
 import co.com.axelis.axelisBack.repository.PublicacionRepository;
 import co.com.axelis.axelisBack.services.PublicacionService;
@@ -34,15 +35,21 @@ public class PublicacionServiceImplement implements PublicacionService {
     }
 
     @Override
+    public Collection<Publicacion> listar(int limit) {
+        log.info("Listando todas las publicaciones");
+        return publicacionRepository.findAll(PageRequest.of(0, limit)).toList();
+    }
+
+    @Override
     public Collection<Publicacion> sugerencias(String titulo) {
         log.info("Obteniendo sugerencias por titulo: {}", titulo);
         return publicacionRepository.findAllByTituloContains(titulo);
     }
-
+    
     @Override
-    public Collection<Publicacion> listar(int limit) {
-        log.info("Listando todas las publicaciones");
-        return publicacionRepository.findAll(PageRequest.of(0, limit)).toList();
+    public Collection<Publicacion> listarPorSeccion(Seccion seccion) {
+        log.info("Listando publicaciones por seccion: {}", seccion);
+        return publicacionRepository.findAllBySeccion(seccion);
     }
 
     @Override
@@ -57,5 +64,6 @@ public class PublicacionServiceImplement implements PublicacionService {
         publicacionRepository.deleteById(id);
         return Boolean.TRUE;
     }
+
     
 }

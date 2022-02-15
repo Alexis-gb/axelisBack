@@ -5,9 +5,9 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,108 +18,115 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.axelis.axelisBack.enumeration.Seccion;
-import co.com.axelis.axelisBack.models.Publicacion;
+import co.com.axelis.axelisBack.models.Reaccion;
 import co.com.axelis.axelisBack.models.Response;
-import co.com.axelis.axelisBack.services.implementations.PublicacionServiceImplement;
+import co.com.axelis.axelisBack.services.implementations.ReaccionServiceImplement;
 import co.com.axelis.axelisBack.services.implementations.UsuarioServiceImplement;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("publicacion")
+@RequestMapping("reaccion")
 @RequiredArgsConstructor
-public class PublicacionResource {
+public class ReaccionResource {
     
-    private final PublicacionServiceImplement publicacionService;
+    private final ReaccionServiceImplement reaccionService;
     private final UsuarioServiceImplement usuarioService;
 
-    // Crear publicación, by admin
+    // Crear reaccion, by Usuario
     @PostMapping("/crear")
-    public ResponseEntity<Response> crearPublicacion(@RequestHeader(value = "auth") String token, @RequestBody @Valid Publicacion publicacion){
+    public ResponseEntity<Response> crearReaccion(@RequestHeader("auth") String token, @RequestBody @Valid Reaccion reaccion){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
-        if(!usuarioService.validarRol(token, 2L)){
+        if(!usuarioService.validarRol(token, 1L)){
             return respuestaNegativa(responseHeaders);
         }
 
         return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("publicacion", publicacionService.crear(publicacion)))
-                    .message("Publicación creada")
+                    .data(Map.of("reaccion", reaccionService.crear(reaccion)))
+                    .message("Reaccion creada")
                     .status(HttpStatus.CREATED)
                     .statusCode(HttpStatus.CREATED.value())
                     .build(), responseHeaders, HttpStatus.CREATED
         );
     }
 
-    // Obtener publicación por id, by All
-    @GetMapping("/post/{id}")
-    public ResponseEntity<Response> obtenerPublicacionPorId(@PathVariable("id") Long id){
+    // Obtener reaccion por Id, by All
+    @GetMapping("/reaccion/{id}")
+    public ResponseEntity<Response> obtenerReaccionPorId(@PathVariable("id") Long id){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
         return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("publicacion", publicacionService.obtener(id)))
-                    .message("Publicación recuperada")
+                    .data(Map.of("reaccion", reaccionService.obtener(id)))
+                    .message("Reaccion recuperada")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build(), responseHeaders, HttpStatus.OK
         );
     }
 
-    // Obtener lista de publicaciones, by All
+    // Obtener todos los reacciones, by Admin
     @GetMapping("/listar")
-    public ResponseEntity<Response> obtenerPublicaciones(){
+    public ResponseEntity<Response> obtenerReacciones(@RequestHeader("auth") String token) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
+        if(!usuarioService.validarRol(token, 2L)){
+            return respuestaNegativa(responseHeaders);
+        }
+
         return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("publicaciones", publicacionService.listar(15)))
-                    .message("Publicaciones recuperadas")
+                    .data(Map.of("reacciones", reaccionService.listar(30)))
+                    .message("Reacciones recuperadas")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build(), responseHeaders, HttpStatus.OK
         );
     }
 
-    // Obtener sugerencias de publicaciones, by All
-    @GetMapping("/sugerencias/{titulo}")
-    public ResponseEntity<Response> obtenerSugerencias(@PathVariable("titulo") String titulo){
+    // Obtener reacciones de publicación especifica, by All
+    @GetMapping("/listarDePublicacion/{id}")
+    public ResponseEntity<Response> reaccionesDePublicacion(@PathVariable("id") Long id){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
         return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("sugerencias", publicacionService.sugerencias(titulo)))
-                    .message("Sugerencias obtenidas")
+                    .data(Map.of("reacciones", reaccionService.listarDePublicacion(id)))
+                    .message("Reacciones recuperadas")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build(), responseHeaders, HttpStatus.OK
         );
     }
 
-    // Listar por seccion.
-    @GetMapping("/seccion/{seccion}")
-    public ResponseEntity<Response> listarPorSeccion(@PathVariable("seccion") Seccion seccion){
+    // Obtener reacciones de un usuario en especifico, by Admin
+    @GetMapping("/listarDeAutor/{id}")
+    public ResponseEntity<Response> listarDeAutor(@RequestHeader("auth") String token, @PathVariable("id") Long id){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
+        if(!usuarioService.validarRol(token, 2L)){
+            return respuestaNegativa(responseHeaders);
+        }
+
         return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("publicaciones", publicacionService.listarPorSeccion(seccion)))
-                    .message("Publicaciones obtenidas")
+                    .data(Map.of("reacciones", reaccionService.listarDeAutor(id)))
+                    .message("Reacciones recuperadas")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build(), responseHeaders, HttpStatus.OK
         );
     }
 
-    // Actualizar publicación, by Admin
+    // Actualizar reaccion, by Admin
     @PutMapping("/actualizar")
-    public ResponseEntity<Response> actualizarPublicacion(@RequestHeader("auth") String token, @RequestBody @Valid Publicacion publicacion){
+    public ResponseEntity<Response> actualizarReaccion(@RequestHeader("auth") String token, @RequestBody @Valid Reaccion reaccion){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
         if(!usuarioService.validarRol(token, 2L)){
@@ -129,17 +136,17 @@ public class PublicacionResource {
         return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("publicacion", publicacionService.actualizar(publicacion)))
-                    .message("Publicación actualizada")
+                    .data(Map.of("reaccion", reaccionService.actualizar(reaccion)))
+                    .message("Reaccion actualizada")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build(), responseHeaders, HttpStatus.OK
         );
     }
 
-    // Eliminar publicacion por Id, by Admin
+    // Eliminar reaccion, by Admin
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<Response> eliminarPublicacion(@RequestHeader("auth") String token, @PathVariable("id") Long id){
+    public ResponseEntity<Response> eliminarReaccion(@RequestHeader("auth") String token, @PathVariable("id") Long id){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
         if(!usuarioService.validarRol(token, 2L)){
@@ -149,14 +156,34 @@ public class PublicacionResource {
         return new ResponseEntity<Response>(
             Response.builder()
                     .timeStamp(LocalDateTime.now())
-                    .data(Map.of("eliminado", publicacionService.eliminar(id)))
-                    .message("Publicacion eliminada")
+                    .data(Map.of("eliminado", reaccionService.eliminar(id)))
+                    .message("Reaccion eliminada")
                     .status(HttpStatus.OK)
                     .statusCode(HttpStatus.OK.value())
                     .build(), responseHeaders, HttpStatus.OK
         );
     }
 
+    // ELiminar reaccion, by Usuario
+    /* @DeleteMapping("/eliminar/u/{id}")
+    public ResponseEntity<Response> eliminarReaccionPorUsuario(@RequestHeader("auth") String token, @PathVariable("id") Long id){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Access-Control-Allow-Origin","http://localhost:4200");
+        if(!usuarioService.validarRol(token, 1L)){
+            return respuestaNegativa(responseHeaders);
+        }
+
+        return new ResponseEntity<Response>(
+            Response.builder()
+                    .timeStamp(LocalDateTime.now())
+                    .data(Map.of("eliminado", reaccionService.eliminar(id)))
+                    .message("Reaccion eliminado")
+                    .status(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .build(), responseHeaders, HttpStatus.OK
+        );
+    } */
+    
     public ResponseEntity<Response> respuestaNegativa(HttpHeaders responseHeaders){
         return new ResponseEntity<Response>(
             Response.builder()
@@ -167,5 +194,4 @@ public class PublicacionResource {
                     .build(), responseHeaders, HttpStatus.UNAUTHORIZED
         );
     }
-
 }
