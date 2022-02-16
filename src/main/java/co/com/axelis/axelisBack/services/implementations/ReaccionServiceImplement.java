@@ -66,10 +66,10 @@ public class ReaccionServiceImplement implements ReaccionService {
     }
 
     @Override
-    public boolean eliminar(Long id) {
+    public String eliminar(Long id) {
         log.info("Eliminando reacción: {}", id);
         reaccionRepository.deleteById(id);
-        return Boolean.TRUE;
+        return Boolean.TRUE.toString();
     }
     
 }

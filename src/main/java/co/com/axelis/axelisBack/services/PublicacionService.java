@@ -20,5 +20,5 @@ public interface PublicacionService {
     Publicacion actualizar(Publicacion publicacion);
 
     // Delete
-    boolean eliminar(Long id);
+    String eliminar(Long id);
 }

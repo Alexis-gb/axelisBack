@@ -13,7 +13,7 @@ public interface UsuarioService {
     Usuario obtener(Long id);
     Usuario obtenerPorCorreo(String correo);
     Usuario actualizar(Usuario usuario);
-    Boolean eliminar(Long id);
+    String eliminar(Long id);
 
     // Gestión de roles
     Rol guardarRol(Rol rol);

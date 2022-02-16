@@ -19,5 +19,5 @@ public interface ReaccionService {
     Reaccion actualizar(Reaccion reaccion);
 
     // Delete
-    boolean eliminar(Long id);
+    String eliminar(Long id);
 }

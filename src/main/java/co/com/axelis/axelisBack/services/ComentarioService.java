@@ -19,5 +19,5 @@ public interface ComentarioService {
     Comentario actualizar(Comentario comentario);
 
     // Delete
-    boolean eliminar(Long id);
+    String eliminar(Long id);
 }

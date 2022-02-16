@@ -66,10 +66,10 @@ public class ComentarioServiceImplement implements ComentarioService {
     }
 
     @Override
-    public boolean eliminar(Long id) {
+    public String eliminar(Long id) {
         log.info("Eliminando comentario: {}", id);
         comentarioRepository.deleteById(id);
-        return Boolean.TRUE;
+        return Boolean.TRUE.toString();
     }
     
 }

@@ -100,10 +100,10 @@ public class UsuarioServiceImplement implements UsuarioService {
     }
 
     @Override
-    public Boolean eliminar(Long id) {
+    public String eliminar(Long id) {
         log.info("Eliminando el usuario con Id: {}", id);
         usuarioRepository.deleteById(id);
-        return Boolean.TRUE;
+        return Boolean.TRUE.toString();
     }
 
     @Override

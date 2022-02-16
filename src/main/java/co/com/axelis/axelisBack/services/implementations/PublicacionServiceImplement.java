@@ -59,10 +59,10 @@ public class PublicacionServiceImplement implements PublicacionService {
     }
 
     @Override
-    public boolean eliminar(Long id) {
+    public String eliminar(Long id) {
         log.info("Eliminando la publicación con Id: {}", id);
         publicacionRepository.deleteById(id);
-        return Boolean.TRUE;
+        return Boolean.TRUE.toString();
     }
 
     
