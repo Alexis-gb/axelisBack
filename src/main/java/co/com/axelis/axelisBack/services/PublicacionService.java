@@ -1,6 +1,6 @@
 package co.com.axelis.axelisBack.services;
 
-import java.util.Collection;
+import java.util.List;
 
 import co.com.axelis.axelisBack.enumeration.Seccion;
 import co.com.axelis.axelisBack.models.Publicacion;
@@ -12,13 +12,13 @@ public interface PublicacionService {
 
     // Read
     Publicacion obtener(Long id);
-    Collection<Publicacion> listar(int limit);
-    Collection<Publicacion> sugerencias(String titulo);
-    Collection<Publicacion> listarPorSeccion(Seccion seccion);
+    List<Publicacion> listar(int limit);
+    List<Publicacion> sugerencias(String titulo);
+    List<Publicacion> listarPorSeccion(Seccion seccion);
 
     // Update
     Publicacion actualizar(Publicacion publicacion);
 
     // Delete
-    String eliminar(Long id);
+    boolean eliminar(Long id);
 }

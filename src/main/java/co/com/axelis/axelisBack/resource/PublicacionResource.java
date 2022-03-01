@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +22,9 @@ import co.com.axelis.axelisBack.services.implementations.UsuarioServiceImplement
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/publicacion")
 @RequiredArgsConstructor
+@CrossOrigin
+@RequestMapping("api/publicacion")
 public class PublicacionResource {
     
     private final PublicacionServiceImplement publicacionService;
@@ -30,61 +32,61 @@ public class PublicacionResource {
 
     // Crear publicación, by admin
     @PostMapping("/crear")
-    public ResponseEntity<String> crearPublicacion(@RequestHeader(value = "auth") String token, @RequestBody @Valid Publicacion publicacion){
+    public ResponseEntity<Object> crearPublicacion(@RequestHeader(value = "auth") String token, @RequestBody @Valid Publicacion publicacion){
         if(!usuarioService.validarRol(token, 2L)){
             return respuestaNegativa();
         }
 
-        return new ResponseEntity<String>(publicacionService.crear(publicacion).toString(), HttpStatus.CREATED);
+        return new ResponseEntity<Object>(publicacionService.crear(publicacion), HttpStatus.CREATED);
     }
 
     // Obtener publicación por id, by All
     @GetMapping("/post/{id}")
-    public ResponseEntity<String> obtenerPublicacionPorId(@PathVariable("id") Long id){
-        return new ResponseEntity<String>(publicacionService.obtener(id).toString(), HttpStatus.OK
+    public ResponseEntity<Object> obtenerPublicacionPorId(@PathVariable("id") Long id){
+        return new ResponseEntity<Object>(publicacionService.obtener(id), HttpStatus.OK
         );
     }
 
     // Obtener lista de publicaciones, by All
     @GetMapping("/listar")
-    public ResponseEntity<String> obtenerPublicaciones(){
-        return new ResponseEntity<String>(publicacionService.listar(15).toString(), HttpStatus.OK);
+    public ResponseEntity<Object> obtenerPublicaciones(){
+        return new ResponseEntity<Object>(publicacionService.listar(15), HttpStatus.OK);
     }
 
     // Obtener sugerencias de publicaciones, by All
     @GetMapping("/sugerencias/{titulo}")
-    public ResponseEntity<String> obtenerSugerencias(@PathVariable("titulo") String titulo){
-        return new ResponseEntity<String>(publicacionService.sugerencias(titulo).toString(), HttpStatus.OK);
+    public ResponseEntity<Object> obtenerSugerencias(@PathVariable("titulo") String titulo){
+        return new ResponseEntity<Object>(publicacionService.sugerencias(titulo), HttpStatus.OK);
     }
 
     // Listar por seccion.
     @GetMapping("/seccion/{seccion}")
-    public ResponseEntity<String> listarPorSeccion(@PathVariable("seccion") Seccion seccion){
-        return new ResponseEntity<String>(publicacionService.listarPorSeccion(seccion).toString(), HttpStatus.OK);
+    public ResponseEntity<Object> listarPorSeccion(@PathVariable("seccion") Seccion seccion){
+        return new ResponseEntity<Object>(publicacionService.listarPorSeccion(seccion), HttpStatus.OK);
     }
 
     // Actualizar publicación, by Admin
     @PutMapping("/actualizar")
-    public ResponseEntity<String> actualizarPublicacion(@RequestHeader("auth") String token, @RequestBody @Valid Publicacion publicacion){
+    public ResponseEntity<Object> actualizarPublicacion(@RequestHeader("auth") String token, @RequestBody @Valid Publicacion publicacion){
         if(!usuarioService.validarRol(token, 2L)){
             return respuestaNegativa();
         }
 
-        return new ResponseEntity<String>(publicacionService.actualizar(publicacion).toString(), HttpStatus.OK);
+        return new ResponseEntity<Object>(publicacionService.actualizar(publicacion), HttpStatus.OK);
     }
 
     // Eliminar publicacion por Id, by Admin
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<String> eliminarPublicacion(@RequestHeader("auth") String token, @PathVariable("id") Long id){
+    public ResponseEntity<Object> eliminarPublicacion(@RequestHeader("auth") String token, @PathVariable("id") Long id){
         if(!usuarioService.validarRol(token, 2L)){
             return respuestaNegativa();
         }
 
-        return new ResponseEntity<String>(publicacionService.eliminar(id), HttpStatus.OK);
+        return new ResponseEntity<Object>(publicacionService.eliminar(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> respuestaNegativa(){
-        return new ResponseEntity<String>("unauthorized", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Object> respuestaNegativa(){
+        return new ResponseEntity<Object>("unauthorized", HttpStatus.UNAUTHORIZED);
     }
 
 }

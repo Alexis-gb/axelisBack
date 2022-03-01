@@ -3,11 +3,9 @@ package co.com.axelis.axelisBack.models;
 import java.util.Calendar;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,9 +32,7 @@ public class Comentario {
     @Temporal(TemporalType.DATE)
     private Calendar fecha;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Usuario autor;
+    private Long autor;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Publicacion publicacionAsociada;
+    private Long publicacionAsociada;
 }

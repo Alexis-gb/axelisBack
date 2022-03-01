@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +19,9 @@ import co.com.axelis.axelisBack.services.implementations.UsuarioServiceImplement
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/usuario")
 @RequiredArgsConstructor
+@CrossOrigin
+@RequestMapping("api/usuario")
 public class UsuarioResource {
     private final UsuarioServiceImplement usuarioService;
     
@@ -33,14 +35,10 @@ public class UsuarioResource {
         return new ResponseEntity<String>(usuarioService.listar(30).toString(), HttpStatus.OK);
     }
 
-    // Buscar usuario por id, by Admin
+    // Buscar usuario por id, by All
     @GetMapping("/id/{id}")
-    public ResponseEntity<String> obtenerUsuarioPorId(@RequestHeader(value = "auth") String token, @PathVariable("id") Long id){
-        if(!usuarioService.validarRol(token, 2L)){
-            return respuestaNegativa();
-        }
-        
-        return new ResponseEntity<String>(usuarioService.obtener(id).toString(), HttpStatus.OK);
+    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable("id") Long id){
+        return new ResponseEntity<Usuario>(usuarioService.obtener(id), HttpStatus.OK);
     }
 
     // Creación de usuario, by Admin
@@ -55,8 +53,8 @@ public class UsuarioResource {
 
     // Creación de usuario, by Usuario
     @PostMapping("/registro")
-    public ResponseEntity<String> registrar(@RequestBody @Valid Usuario usuario){
-        return new ResponseEntity<String>(usuarioService.registro(usuario).toString(), HttpStatus.CREATED);
+    public ResponseEntity<Usuario> registrar(@RequestBody @Valid Usuario usuario){
+        return new ResponseEntity<Usuario>(usuarioService.registro(usuario), HttpStatus.CREATED);
     }
 
     // Buscar usuario por correo, by Admin

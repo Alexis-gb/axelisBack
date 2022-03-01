@@ -14,6 +14,7 @@ public interface ReaccionService {
     Collection<Reaccion> listar(int limit);
     Collection<Reaccion> listarDePublicacion(Long id);
     Collection<Reaccion> listarDeAutor(Long id);
+    Long contarPorPublicacion(Long id);
 
     // Update
     Reaccion actualizar(Reaccion reaccion);

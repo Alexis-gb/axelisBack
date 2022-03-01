@@ -60,6 +60,13 @@ public class ReaccionServiceImplement implements ReaccionService {
     }
 
     @Override
+    public Long contarPorPublicacion(Long id) {
+        log.info("Contando todas las reacciones de la publicacion: {}", id);
+        Publicacion publicacionAsociada = publicacionRepository.getById(id);
+        return reaccionRepository.countByPublicacionAsociada(publicacionAsociada);
+    }
+
+    @Override
     public Reaccion actualizar(Reaccion reaccion) {
         log.info("Actualizando reacción: {}", reaccion.getId());
         return reaccionRepository.save(reaccion);

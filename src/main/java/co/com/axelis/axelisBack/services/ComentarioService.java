@@ -1,6 +1,6 @@
 package co.com.axelis.axelisBack.services;
 
-import java.util.Collection;
+import java.util.List;
 
 import co.com.axelis.axelisBack.models.Comentario;
 
@@ -11,9 +11,9 @@ public interface ComentarioService {
 
     // Read
     Comentario obtener(Long id);
-    Collection<Comentario> listar(int limit);
-    Collection<Comentario> listarDePublicacion(Long id);
-    Collection<Comentario> listarDeAutor(Long id);
+    List<Comentario> listar(int limit);
+    List<Comentario> listarDePublicacion(Long id);
+    List<Comentario> listarDeAutor(Long id);
 
     // Update
     Comentario actualizar(Comentario comentario);

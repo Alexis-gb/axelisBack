@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +22,9 @@ import co.com.axelis.axelisBack.services.implementations.UsuarioServiceImplement
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/comentario")
 @RequiredArgsConstructor
+@CrossOrigin
+@RequestMapping("api/comentario")
 public class ComentarioResource {
     
     private final ComentarioServiceImplement comentarioService;
@@ -56,8 +58,8 @@ public class ComentarioResource {
 
     // Obtener comentarios de publicación especifica, by All
     @GetMapping("/listarDePublicacion/{id}")
-    public ResponseEntity<String> comentariosDePublicacion(@PathVariable("id") Long id){
-        return new ResponseEntity<String>(comentarioService.listarDePublicacion(id).toString(), HttpStatus.OK);
+    public ResponseEntity<Object> comentariosDePublicacion(@PathVariable("id") Long id){
+        return new ResponseEntity<Object>(comentarioService.listarDePublicacion(id), HttpStatus.OK);
     }
 
     // Obtener comentarios de un usuario en especifico, by Admin

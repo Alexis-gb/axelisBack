@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +21,9 @@ import co.com.axelis.axelisBack.services.implementations.UsuarioServiceImplement
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/reaccion")
 @RequiredArgsConstructor
+@CrossOrigin
+@RequestMapping("api/reaccion")
 public class ReaccionResource {
     
     private final ReaccionServiceImplement reaccionService;
@@ -67,6 +69,12 @@ public class ReaccionResource {
         }
 
         return new ResponseEntity<String>(reaccionService.listarDeAutor(id).toString(), HttpStatus.OK);
+    }
+
+    // Contador de reacciones
+    @GetMapping("/contar/{id}")
+    public ResponseEntity<String> contarReacciones(@PathVariable("id") Long id){
+        return new ResponseEntity<String>(reaccionService.contarPorPublicacion(id).toString(), HttpStatus.OK);
     }
 
     // Actualizar reaccion, by Admin

@@ -11,4 +11,5 @@ import co.com.axelis.axelisBack.models.Usuario;
 public interface ReaccionRepository extends JpaRepository<Reaccion, Long> {
     Collection<Reaccion> findAllByPublicacionAsociada(Publicacion publicacionAsociada);
     Collection<Reaccion> findAllByAutor(Usuario usuario);
+    Long countByPublicacionAsociada(Publicacion publicacionAsociada);
 }

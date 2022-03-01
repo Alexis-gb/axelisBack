@@ -1,6 +1,6 @@
 package co.com.axelis.axelisBack.services.implementations;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -35,19 +35,19 @@ public class PublicacionServiceImplement implements PublicacionService {
     }
 
     @Override
-    public Collection<Publicacion> listar(int limit) {
+    public List<Publicacion> listar(int limit) {
         log.info("Listando todas las publicaciones");
         return publicacionRepository.findAll(PageRequest.of(0, limit)).toList();
     }
 
     @Override
-    public Collection<Publicacion> sugerencias(String titulo) {
+    public List<Publicacion> sugerencias(String titulo) {
         log.info("Obteniendo sugerencias por titulo: {}", titulo);
         return publicacionRepository.findAllByTituloContains(titulo);
     }
     
     @Override
-    public Collection<Publicacion> listarPorSeccion(Seccion seccion) {
+    public List<Publicacion> listarPorSeccion(Seccion seccion) {
         log.info("Listando publicaciones por seccion: {}", seccion);
         return publicacionRepository.findAllBySeccion(seccion);
     }
@@ -59,10 +59,10 @@ public class PublicacionServiceImplement implements PublicacionService {
     }
 
     @Override
-    public String eliminar(Long id) {
+    public boolean eliminar(Long id) {
         log.info("Eliminando la publicación con Id: {}", id);
         publicacionRepository.deleteById(id);
-        return Boolean.TRUE.toString();
+        return Boolean.TRUE;
     }
 
     
